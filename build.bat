@@ -1,0 +1,1 @@
+pyinstaller cheeseboxes.spec --noconfirm
