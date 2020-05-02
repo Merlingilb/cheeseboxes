@@ -3,6 +3,8 @@ import socket
 from game import game
 from box import box
 
+version = "0.1.0.0"
+
 HOST = '193.31.24.180'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 
@@ -64,7 +66,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     while 1:
         if gamePlay == None and len(globalData)<1:
-            s.sendall(b'\x00\x01')
+            s.sendall(b'\x00\x01'+bytes(version, "utf-8"))
             print("Send: "+str(b'\x00\x01',"utf-8"))
             s.settimeout(10000)
         else:

@@ -5,6 +5,8 @@ import types
 from game import game
 from player import player
 
+version = "0.1.0.1"
+
 HOST = '0.0.0.0'
 PORT = 65432
 
@@ -32,7 +34,7 @@ def addData(data, client):
 
 def handle(data):
     global games
-    if len(data[0]) > 0 and data[0][0] == "\x01":
+    if len(data[0]) > 0 and data[0][0] == "\x01" and data[0][1:] == version:
         data[1].outb += b"\x00\x02"
         added = False
         for i in games:
