@@ -101,5 +101,4 @@ def generate():
     field.append(box((6, 4), [False, False, True, True]))
     field.append(box((6, 5), [False, True, True, False]))
     fields.append(field)
-    return fields[2]
     return fields[randint(0, len(fields)-1)]
