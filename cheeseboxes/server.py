@@ -5,7 +5,7 @@ import types
 from game import game
 from player import player
 
-version = "0.1.0.1"
+version = "0.1.0.0"
 
 HOST = '0.0.0.0'
 PORT = 65432
