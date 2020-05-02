@@ -47,7 +47,7 @@ jobs:
         mkdir .\archive
         mkdir .\archive\dist
         mkdir .\archive\dist\cheeseboxes
-        xcopy .\dist\cheeseboxes\* .\archive\cheeseboxes\lss\ /s /e
+        xcopy .\dist\cheeseboxes\* .\archive\cheeseboxes\cheeseboxes\ /s /e
         xcopy .\start.bat .\archive\
     
     - uses: actions/upload-artifact@v1
