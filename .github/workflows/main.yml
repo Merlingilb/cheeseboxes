@@ -41,6 +41,9 @@ jobs:
     
     - name: Copy files
       run: |
+        dir .\
+        dir .\dist\
+        dir .\cheeseboxes_client\
         mkdir .\archive
         mkdir .\archive\dist
         mkdir .\archive\dist\cheeseboxes
