@@ -37,8 +37,24 @@ class game(threading.Thread):
         if self.enabled:
             for box in self.boxes:
                 if box.pos == coords1:
+                    if box.wallNorth and direction1==0:
+                        return False
+                    if box.wallEast and direction1==1:
+                        return False
+                    if box.wallSouth and direction1==2:
+                        return False
+                    if box.wallWest and direction1==3:
+                        return False
                     box.setWall(direction1)
                 if box.pos == coords2:
+                    if box.wallNorth and direction2==0:
+                        return False
+                    if box.wallEast and direction2==1:
+                        return False
+                    if box.wallSouth and direction2==2:
+                        return False
+                    if box.wallWest and direction2==3:
+                        return False
                     box.setWall(direction2)
             args = ""
             args += str(coords1[0]) + "," + str(coords1[1])
