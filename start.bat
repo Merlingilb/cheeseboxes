@@ -1,1 +1,1 @@
-.\dist\cheesebox\cheesebox.exe
+.\dist\cheeseboxes\cheeseboxes.exe
