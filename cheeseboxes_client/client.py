@@ -3,7 +3,7 @@ import socket
 from game import game
 from box import box
 
-HOST = '127.0.0.1'  # The server's hostname or IP address
+HOST = '193.31.24.180'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
 
 gamePlay = None
