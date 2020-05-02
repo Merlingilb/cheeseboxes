@@ -5,7 +5,7 @@ import types
 from game import game
 from player import player
 
-HOST = '127.0.0.1'
+HOST = '*'
 PORT = 65432
 
 sel = selectors.DefaultSelector()
