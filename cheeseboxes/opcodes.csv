@@ -1,0 +1,9 @@
+00, both, command seperator
+01, client, request game
+02, server, added to game
+03, server, send box data
+04, server, enable for move
+05, client, set wall
+06, client, ready for game with name as data
+07, server, winner
+08, server, looser
