@@ -6,7 +6,7 @@ sys.setrecursionlimit(5000)
 block_cipher = None
 
 
-a = Analysis(['cheeseboxes/client.py'],
+a = Analysis(['cheeseboxes_client/client.py'],
              binaries=[],
              datas=[],
              hiddenimports=[],
