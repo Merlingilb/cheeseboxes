@@ -159,5 +159,5 @@ def generate():
     field.append(box((8, 7), [False, False, True, False]))
     field.append(box((8, 8), [False, True, True, False]))
     fields.append(field)
-    return fields[randint(len(fields)-1, len(fields)-1)]
+    #return fields[randint(len(fields)-1, len(fields)-1)]
     return fields[randint(0, len(fields)-1)]
