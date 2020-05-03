@@ -8,6 +8,7 @@ from player import player
 version = "0.2.0.0"
 
 HOST = '0.0.0.0'
+HOST = '127.0.0.1'
 PORT = 65432
 
 sel = selectors.DefaultSelector()

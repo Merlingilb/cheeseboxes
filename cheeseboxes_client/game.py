@@ -104,6 +104,6 @@ class game(threading.Thread):
         self.button.pack()
         self.label = Label(self.master, text="", font="Verdana 30 bold", fg="red")
         self.label.pack()
-        self.label2 = Label(self.master, text="")
+        self.label2 = Label(self.master, text="", font="Verdana 20 bold")
         self.label2.pack()
         self.master.mainloop()

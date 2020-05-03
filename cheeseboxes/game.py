@@ -110,9 +110,9 @@ class game(threading.Thread):
             while self.ready<0:
                 time.sleep(0.1)
             self.i = randint(0,1)
-            text0 = self.players[0].name + ";" + self.players[0].points + ";" + self.players[1].name + ";" + self.players[1].points
+            text0 = self.players[0].name + ";" + str(self.players[0].points) + ";" + self.players[1].name + ";" + str(self.players[1].points)
             self.players[0].sendCommand(b"\x09" + bytes(text0, "utf-8"))
-            text1 = self.players[1].name + ";" + self.players[1].points + ";" + self.players[0].name + ";" + self.players[0].points
+            text1 = self.players[1].name + ";" + str(self.players[1].points) + ";" + self.players[0].name + ";" + str(self.players[0].points)
             self.players[1].sendCommand(b"\x09" + bytes(text1, "utf-8"))
             while 1:
                 self.sendField()
