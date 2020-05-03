@@ -7,3 +7,4 @@
 06, client, ready for game with name as data
 07, server, winner
 08, server, looser
+09, server, points per user

@@ -110,6 +110,10 @@ class game(threading.Thread):
             while self.ready<0:
                 time.sleep(0.1)
             self.i = randint(0,1)
+            text0 = self.players[0].name + ";" + self.players[0].points + ";" + self.players[1].name + ";" + self.players[1].points
+            self.players[0].sendCommand(b"\x09" + bytes(text0, "utf-8"))
+            text1 = self.players[1].name + ";" + self.players[1].points + ";" + self.players[0].name + ";" + self.players[0].points
+            self.players[1].sendCommand(b"\x09" + bytes(text1, "utf-8"))
             while 1:
                 self.sendField()
                 self.waiting = True
@@ -123,9 +127,14 @@ class game(threading.Thread):
             winner = self.winner()
             for player in winner:
                 player.sendCommand(b"\x07")
+                player.addPoint()
             looser = self.looser()
             for player in looser:
                 player.sendCommand(b"\x08")
+            text0 = self.players[0].name + ";" + self.players[0].points + ";" + self.players[1].name + ";" + self.players[1].points
+            self.players[0].sendCommand(b"\x09" + bytes(text0, "utf-8"))
+            text1 = self.players[1].name + ";" + self.players[1].points + ";" + self.players[0].name + ";" + self.players[0].points
+            self.players[1].sendCommand(b"\x09" + bytes(text1, "utf-8"))
             self.boxes = self.generateField()
             self.ready=-2
 
