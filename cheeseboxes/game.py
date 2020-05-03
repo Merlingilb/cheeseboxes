@@ -131,9 +131,9 @@ class game(threading.Thread):
             looser = self.looser()
             for player in looser:
                 player.sendCommand(b"\x08")
-            text0 = self.players[0].name + ";" + self.players[0].points + ";" + self.players[1].name + ";" + self.players[1].points
+            text0 = self.players[0].name + ";" + str(self.players[0].points) + ";" + self.players[1].name + ";" + str(self.players[1].points)
             self.players[0].sendCommand(b"\x09" + bytes(text0, "utf-8"))
-            text1 = self.players[1].name + ";" + self.players[1].points + ";" + self.players[0].name + ";" + self.players[0].points
+            text1 = self.players[1].name + ";" + str(self.players[1].points) + ";" + self.players[0].name + ";" + str(self.players[0].points)
             self.players[1].sendCommand(b"\x09" + bytes(text1, "utf-8"))
             self.boxes = self.generateField()
             self.ready=-2
