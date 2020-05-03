@@ -30,7 +30,7 @@ class box:
 
     def setOwner(self, player):
         self.owner = player
-        player.addPoint()
+        #player.addPoint()
 
     def getWalls(self):
         return [self.wallNorth, self.wallEast, self.wallSouth, self.wallWest]

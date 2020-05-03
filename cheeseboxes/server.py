@@ -5,7 +5,7 @@ import types
 from game import game
 from player import player
 
-version = "0.1.0.1"
+version = "0.2.0.0"
 
 HOST = '0.0.0.0'
 PORT = 65432
@@ -79,7 +79,7 @@ def service_connection(key, mask):
     data = key.data
     if mask & selectors.EVENT_READ:
         try:
-            recv_data = sock.recv(1024)  # Should be ready to read
+            recv_data = sock.recv(2048)  # Should be ready to read
             if recv_data:
                 addData(recv_data, data)
                 print("Data received: ", recv_data)

@@ -15,6 +15,7 @@ class game(threading.Thread):
         self.entry = None
         self.button = None
         self.label = None
+        self.label2 = None
         threading.Thread.__init__(self)
         self.queue = queue
         self.enabled = False
@@ -77,6 +78,9 @@ class game(threading.Thread):
                 box.setSelected(-1)
 
     def startGame(self):
+        if len(self.entry.get())<1:
+            self.label.config(text="Type your name!")
+            return
         self.sendCommand(b"\x06", bytes(self.entry.get(), "utf-8"))
         self.entry.config(state='disabled')
         self.label.config(text="")
@@ -86,6 +90,9 @@ class game(threading.Thread):
 
     def looser(self):
         self.label.config(text="Looser!")
+
+    def points(self, text):
+        self.label2.config(text=text)
 
     def run(self):
         self.master = Tk()
@@ -97,4 +104,6 @@ class game(threading.Thread):
         self.button.pack()
         self.label = Label(self.master, text="", font="Verdana 30 bold", fg="red")
         self.label.pack()
+        self.label2 = Label(self.master, text="")
+        self.label2.pack()
         self.master.mainloop()
