@@ -3,7 +3,7 @@ import socket
 from game import game
 from box import box
 
-version = "0.1.0.0"
+version = "0.1.0.1"
 
 HOST = '193.31.24.180'  # The server's hostname or IP address
 PORT = 65432        # The port used by the server
@@ -20,7 +20,7 @@ def send(data):
 def addData(data):
     global globalData
     tempData = str(data, "utf-8").split("\x00")
-    if not data[0:1] == b"\x00":
+    if not data[0:1] == b"\x00" and len(globalData)>0:
         globalData[-1] = globalData[-1] + tempData[0]
         tempData.pop(0)
     for i in tempData:
