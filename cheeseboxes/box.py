@@ -35,6 +35,18 @@ class box:
     def getWalls(self):
         return [self.wallNorth, self.wallEast, self.wallSouth, self.wallWest]
 
+    def getWallNumber(self):
+        i = 0
+        if self.wallNorth:
+            i += 1
+        if self.wallEast:
+            i += 1
+        if self.wallSouth:
+            i += 1
+        if self.wallWest:
+            i += 1
+        return i
+
     def setSelected(self, direction):
         if direction == 0 and not self.wallNorth:
             self.selectedNorth = True
