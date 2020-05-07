@@ -6,7 +6,7 @@ import types
 from game import game
 from player import player
 
-version = "1.0.0.0"
+version = "1.0.0.1"
 
 HOST = '0.0.0.0'
 #HOST = '127.0.0.1'
@@ -26,11 +26,12 @@ def sendGameList():
     for game in games:
         if len(game[0].players) < 2:
             gamelist += "Game " + str(games.index(game)) + " with player: " + game[0].players[0].name + "," + str(hash(game[1][0].addr[0]+str(game[1][0].addr[1]))) + ";"
-
-    keys = sel._writers
-    for key in keys:
-        client = sel._fd_to_key[key]
-        client.data.outb += b"\x0D" + bytes(gamelist, "utf-8")
+    for key in sel.get_map():
+        try:
+            client = sel.get_map()[key]
+            client.data.outb += b"\x0D" + bytes(gamelist, "utf-8")
+        except:
+            pass
 
 def addData(data, client):
     global globalData
