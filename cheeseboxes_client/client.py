@@ -3,7 +3,7 @@ import socket
 from game import game
 from box import box
 
-version = "0.3.0.0"
+version = "1.0.0.0"
 
 HOST = '193.31.24.180'  # The server's hostname or IP address
 #HOST = '127.0.0.1'  # The server's hostname or IP address
@@ -14,6 +14,8 @@ data = None
 
 globalData = []
 queue = []
+
+gamePlay = game(queue, version)
 
 def send(data):
     s.sendall(data)
@@ -55,7 +57,7 @@ def handle(data):
             boxes.append(box((int(boxDate[0]), int(boxDate[1])), walls, owner))
         gamePlay.boxes = boxes
     if len(data) > 0 and data[0] == "\x02":
-        gamePlay = game(queue)
+        gamePlay.joined()
     if len(data) > 0 and data[0] == "\x04":
         gamePlay.enablePlay()
     if len(data) > 0 and data[0] == "\x07":
@@ -67,16 +69,17 @@ def handle(data):
         text = ""
         text += pointsData[0] + "  " + pointsData[1] + " : " + pointsData[3] + "  " + pointsData[2]
         gamePlay.points(text)
+    if len(data) > 0 and data[0] == "\x0A":
+        gamePlay.newGame()
+    if len(data) > 0 and data[0] == "\x0C":
+        gamePlay.quitted()
+    if len(data) > 0 and data[0] == "\x0D":
+        gamePlay.gameList(data[1:])
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
     while 1:
-        if gamePlay == None and len(globalData)<1:
-            s.sendall(b'\x00\x01'+bytes(version, "utf-8"))
-            print("Send: "+str(b'\x00\x01',"utf-8"))
-            s.settimeout(10000)
-        else:
-            s.settimeout(0.1)
+        s.settimeout(0.1)
         try:
             data = s.recv(2048)
             print("Data: "+str(data,"utf-8"))
@@ -87,5 +90,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if len(globalData)>0:
             handle(globalData.pop(0))
         if len(queue)>0:
+            if queue[0]=="SHUTDOWN":
+                break
             send(queue.pop(0))
 

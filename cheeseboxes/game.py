@@ -14,6 +14,7 @@ from player import player
 class game(threading.Thread):
     def __init__(self, player):
         threading.Thread.__init__(self)
+        self.stop = False
         self.test = 50
         self.boxes = self.generateField()
         self.players = [player]
@@ -105,9 +106,25 @@ class game(threading.Thread):
             return [self.players[0]]
         return []
 
+    def playersReady(self):
+        if len(self.players) < 2:
+            return False
+        for player in self.players:
+            if not player.ready:
+                return False
+        return True
+
+    def quit(self):
+        self.stop = True
+        self.join()
+        for player in self.players:
+            player.sendCommand(b"\x0C")
+
     def run(self):
         while 1:
-            while self.ready<0:
+            while not self.playersReady():
+                if self.stop:
+                    return
                 time.sleep(0.1)
             self.i = randint(0,1)
             text0 = self.players[0].name + ";" + str(self.players[0].points) + ";" + self.players[1].name + ";" + str(self.players[1].points)
@@ -119,6 +136,8 @@ class game(threading.Thread):
                 self.waiting = True
                 self.nextPlayer()
                 while self.waiting:
+                    if self.stop:
+                        return
                     time.sleep(0.02)
                 self.switchPlayer()
                 if self.endGame():
@@ -136,7 +155,9 @@ class game(threading.Thread):
             text1 = self.players[1].name + ";" + str(self.players[1].points) + ";" + self.players[0].name + ";" + str(self.players[0].points)
             self.players[1].sendCommand(b"\x09" + bytes(text1, "utf-8"))
             self.boxes = self.generateField()
-            self.ready=-2
+            for player in self.players:
+                player.ready = False
+                player.sendCommand(b"\x0A")
 
     def nextPlayer(self):
         self.players[self.i].sendCommand(b"\x04")

@@ -1,11 +1,12 @@
 import selectors
 import socket
+import time
 import types
 
 from game import game
 from player import player
 
-version = "0.3.0.0"
+version = "1.0.0.0"
 
 HOST = '0.0.0.0'
 #HOST = '127.0.0.1'
@@ -18,6 +19,18 @@ games = list()
 keyTest = None
 
 globalData = []
+
+def sendGameList():
+    global sel, games
+    gamelist = ""
+    for game in games:
+        if len(game[0].players) < 2:
+            gamelist += "Game " + str(games.index(game)) + " with player: " + game[0].players[0].name + "," + str(hash(game[1][0].addr[0]+str(game[1][0].addr[1]))) + ";"
+
+    keys = sel._writers
+    for key in keys:
+        client = sel._fd_to_key[key]
+        client.data.outb += b"\x0D" + bytes(gamelist, "utf-8")
 
 def addData(data, client):
     global globalData
@@ -37,14 +50,7 @@ def handle(data):
     global games
     if len(data[0]) > 0 and data[0][0] == "\x01" and data[0][1:] == version:
         data[1].outb += b"\x00\x02"
-        added = False
-        for i in games:
-            if len(i[1]) < 2 and (not i[1][0] == data[1]):
-                i[1].append(data[1])
-                i[0].addPlayer(player("2", "#0000FF", data[1]))
-                added = True
-        if not added:
-            games.append([game(player("1", "#00FF00", data[1])), [data[1]]])
+        games.append([game(player("1", "#00FF00", data[1])), [data[1]]])
     if len(data[0]) > 0 and data[0][0] == "\x05":
         for i in games:
             if data[1] in i[1]:
@@ -60,10 +66,25 @@ def handle(data):
                 if data[1] == i[0].players[0].data:
                     i[0].players[0].name = data[0][1:]
                     i[0].sendField(0)
+                    i[0].players[0].ready = True
                 if len(i[0].players)>1 and data[1] == i[0].players[1].data:
                     i[0].players[1].name = data[0][1:]
                     i[0].sendField(1)
-                i[0].ready += 1
+                    i[0].players[1].ready = True
+    if len(data[0]) > 0 and data[0][0] == "\x0B":
+        for i in games:
+            if data[1] in i[1]:
+                i[0].quit()
+                games.remove(i)
+                break
+    if len(data[0]) > 0 and data[0][0] == "\x0E" and data[0][1:].split(";")[0] == version:
+        hashed = data[0][1:].split(";")[1]
+        for i in games:
+            thisHash = str(hash(i[1][0].addr[0]+str(i[1][0].addr[1])))
+            if len(i[1]) < 2 and (not i[1][0] == data[1]) and hashed == thisHash:
+                data[1].outb += b"\x00\x02"
+                i[1].append(data[1])
+                i[0].addPlayer(player("2", "#0000FF", data[1]))
 
 
 def accept_wrapper(sock):
@@ -75,7 +96,7 @@ def accept_wrapper(sock):
     sel.register(conn, events, data=data)
 
 def service_connection(key, mask):
-    global keyTest
+    global games
     sock = key.fileobj
     data = key.data
     if mask & selectors.EVENT_READ:
@@ -88,15 +109,28 @@ def service_connection(key, mask):
                 print("closing connection to", data.addr)
                 sel.unregister(sock)
                 sock.close()
+                for i in games:
+                    if data in i[1]:
+                        i[0].quit()
+                        games.remove(i)
+                        break
         except:
             print("closing connection to", data.addr)
             sel.unregister(sock)
             sock.close()
+            for i in games:
+                if data in i[1]:
+                    i[0].quit()
+                    games.remove(i)
+                    break
     if mask & selectors.EVENT_WRITE:
         if data.outb:
             print("echoing", repr(data.outb), "to", data.addr)
-            sent = sock.send(data.outb)  # Should be ready to write
-            data.outb = data.outb[sent:]
+            try:
+                sent = sock.send(data.outb)  # Should be ready to write
+                data.outb = data.outb[sent:]
+            except OSError:
+                data.outb = b""
             print(data.outb)
 
 lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -105,10 +139,12 @@ lsock.listen()
 print("listening on", (HOST, PORT))
 lsock.setblocking(False)
 sel.register(lsock, selectors.EVENT_READ, data=None)
+lastTimestamp = time.time()
 
 try:
     while True:
         events = sel.select(timeout=None)
+        a = sel
         for key, mask in events:
             if key.data is None:
                 accept_wrapper(key.fileobj)
@@ -116,6 +152,9 @@ try:
                 service_connection(key, mask)
         if len(globalData)>0:
             handle(globalData.pop(0))
+        if lastTimestamp < time.time() - 1:
+            sendGameList()
+            lastTimestamp = time.time()
 except KeyboardInterrupt:
     print("caught keyboard interrupt, exiting")
 finally:

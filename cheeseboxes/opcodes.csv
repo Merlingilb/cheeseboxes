@@ -8,3 +8,8 @@
 07, server, winner
 08, server, looser
 09, server, points per user
+0A, server, waiting for start new game
+0B, client, leave current game
+0C, server, quit current game
+0D, server, send joinable game list
+0E, client, connect to specific game with hash in data or create a new game with data = 0
