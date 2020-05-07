@@ -6,6 +6,7 @@ class player:
         self.color = color
         self.points = 0
         self.data = data
+        self.ready = False
 
     def addPoint(self):
         self.points+=1
