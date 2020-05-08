@@ -6,7 +6,7 @@ import types
 from game import game
 from player import player
 
-version = "1.0.0.1"
+version = "1.0.1.0"
 
 HOST = '0.0.0.0'
 #HOST = '127.0.0.1'
