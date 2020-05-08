@@ -154,16 +154,12 @@ class game(threading.Thread):
             if not game == "":
                 self.gameListData.append(game.split(","))
         self.gameListData = [list(item) for item in set(tuple(row) for row in self.gameListData)]
-        #toDelete = list()
+        alreadyAdded = list()
         for i, listbox_entry in enumerate(self.gameLists.get(0, END)):
-            if listbox_entry in [item[0] for item in self.gameListData]:
-                continue
+            if listbox_entry in [item[0] for item in self.gameListData] and not listbox_entry in alreadyAdded:
+                alreadyAdded.append(listbox_entry)
             else:
                 self.gameLists.delete(i)
-                #toDelete.append(listbox_entry)
-        #for i in toDelete:
-            #self.gameLists.delete(i)
-        #self.gameLists.delete(0, END)
         toAdd = list()
         for game in self.gameListData:
             if game[0] in self.gameLists.get(0, END):
