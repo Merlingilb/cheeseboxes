@@ -3,7 +3,7 @@ import socket
 from game import game
 from box import box
 
-version = "1.0.1.0"
+version = "1.0.1.1"
 
 HOST = '193.31.24.180'  # The server's hostname or IP address
 #HOST = '127.0.0.1'  # The server's hostname or IP address
